@@ -1,3 +1,5 @@
+<a href="https://webpod.dev/?from=zx"><img src="https://webpod.dev/img/banner.png" alt="Webpod - deploy JavaScript apps" width="190" align="right"></a>
+
 # 🐚 zx
 
 ```js
@@ -169,6 +171,13 @@ cd('/tmp')
 await $`pwd` // => /tmp
 ```
 
+Like `echo`, in addition to `string` arguments, `cd` accepts and trims
+trailing newlines from `ProcessOutput` enabling common idioms like:
+
+```js
+cd(await $`mktemp -d`)
+```
+
 ### `fetch()`
 
 A wrapper around the [node-fetch](https://www.npmjs.com/package/node-fetch)
@@ -233,11 +242,15 @@ await $`pwd` // => /home/path
 ```
 
 ```js
+await $`node --version` // => v20.2.0
+
 let version = await within(async () => {
-  $.prefix += 'export NVM_DIR=$HOME/.nvm; source $NVM_DIR/nvm.sh; '
-  await $`nvm use 16`
-  return $`node -v`
+  $.prefix += 'export NVM_DIR=$HOME/.nvm; source $NVM_DIR/nvm.sh; nvm use 16;'
+  
+  return $`node --version`
 })
+
+echo(version) // => v16.20.0
 ```
 
 ### `retry()`
